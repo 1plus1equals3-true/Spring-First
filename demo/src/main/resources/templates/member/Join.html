@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="/join.css">
+</head>
+<body>
+	<form name="join_form" action="/member/Join_proc" method="post" enctype="multipart/form-data">
+		<h2>회 원 가 입</h2>
+		<table>
+		<tr>
+		<td>아이디</td>
+		<td><input type="text" name="uid" id="uid" onkeyup="id_check()"></td>
+		</tr>
+		
+		<tr>
+		<td colspan="2" style="text-align: center;"><span id="id_msg"></span></td>
+		</tr>
+		
+		<tr>
+		<td>비밀번호</td>
+		<td><input type="password" name="upass1" id="upass1" onkeyup="pass_check()"></td>
+		</tr>
+		
+		<tr>
+		<td>비밀번호 확인</td>
+		<td><input type="password" name="upass2" id="upass2" onkeyup="pass_check()"></td>
+		</tr>
+		
+		<tr>
+		<td colspan="2" style="text-align: center;"><span id="pass_msg"></span></td>
+		</tr>
+		
+		<tr>
+		<td>이름</td>
+		<td><input type="text" name="uname"></td>
+		</tr>
+		
+		<tr>
+		<td>성별</td>
+		<td><input type="radio" name="sex" value="M" checked="checked">남자
+			<input type="radio" name="sex" value="F">여자</td>
+		</tr>
+		
+		<tr>
+		<td>생일</td>
+		<td>
+		<select name="yyyy" id="selectYear">
+            <option value="">년도</option>
+		</select><br><br>
+		
+		<select name="mm" id="selectMonth">
+				<option value="">월</option>
+		</select><br><br>
+		
+		<select name="dd" id="selectDay">
+				<option value="">일</option>
+		</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<td>취미</td>
+		<td><input type="checkbox" name="hobby" value="football">축구
+			<input type="checkbox" name="hobby" value="basketball">농구
+			<input type="checkbox" name="hobby" value="Volleyball">배구</td>
+		</tr>
+		
+		<tr>
+		<td>사진</td>
+		<td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
+		</tr>
+
+		<tr>
+		<td colspan="2" style="text-align: center;">
+			<input type="button" value="가입" onclick="submit_check()">
+			<input type="reset" value="리셋">
+			<button type="button" onclick="history.back()">취소</button>
+		</td>
+		</tr>
+		
+		</table>
+	</form>
+</body>
+
+<script type="text/javascript">
+        // 1. 현재 연도 가져오기
+        const currentYear = new Date().getFullYear();
+
+        // 2. 년도 범위 설정
+        const startYear = 1950; // 시작 연도 (가장 작은 값)
+        const endYear = currentYear; // 종료 연도 (가장 큰 값)
+
+        // 3. select 요소 가져오기
+        const selectYear = document.getElementById('selectYear');
+
+        // 4. 반복문으로 option 생성 및 추가 (오름차순: i를 증가시키면서 반복)
+        for (let i = startYear; i <= endYear; i++) {
+            // 새로운 option 요소 생성
+            const option = document.createElement('option');
+
+            // option의 value와 화면에 표시될 텍스트 설정
+            option.value = i;
+            option.text = i + '년';
+
+            // select 요소에 option 추가
+            selectYear.appendChild(option);
+        }
+
+    // 월 생성 12월까지
+    const selectMonth = document.getElementById('selectMonth');
+    for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        // 앞에 0 붙이기
+        const displayValue = String(i).padStart(2, '0');
+
+        option.value = displayValue;
+        option.text = displayValue + '월';
+        selectMonth.appendChild(option);
+    }
+
+    // 일 생성 31일까지
+    const selectDay = document.getElementById('selectDay');
+    for (let i = 1; i <= 31; i++) {
+        const option = document.createElement('option');
+        // 앞에 0 붙이기
+        const displayValue = String(i).padStart(2, '0');
+
+        option.value = displayValue;
+        option.text = displayValue + '일';
+        selectDay.appendChild(option);
+    }
+
+
+    function submit_check() {
+        var uid = document.getElementById("uid");
+        var upass1 = document.getElementById("upass1");
+        var upass2 = document.getElementById("upass2");
+               if(uid.value.trim().length < 4 ){
+                  alert('아이디가 너무 짧습니다.');
+                  uid.focus();
+                  return;
+               }else if (upass1.value.trim().length < 4 || upass2.value.trim().length < 4) {
+                   alert('비밀번호가 너무 짧습니다.');
+                   upass1.focus();
+                  return;
+               }else if (upass1.value !== upass2.value) {
+                   alert('비밀번호가 서로 다릅니다.');
+                   upass1.focus();
+                  return;
+               }else {
+                document.join_form.submit();
+            }
+    }
+
+    function id_check()
+    {
+       var uid = $('#uid').val();
+
+       if(uid.length < 4)
+       {
+          return;
+       }
+
+       $.ajax({
+          url : "./Join_check.jsp",
+          type : "post",
+          data : {uid: uid},
+          dataType : 'html',
+          success : function(result){
+
+             var data = result.trim();
+
+             if(data == "Y")
+             {
+                var msg = "<font color='blue'>아이디 사용 가능</font>";
+                $('#id_msg').html(msg);
+             }
+             else
+             {
+                var msg = "<font color='red'>아이디 사용 불가</font>";
+                $('#id_msg').html(msg);
+             }
+          },
+          error: function (request, status, error) {
+               console.log("code: " + request.status)
+               console.log("message: " + request.responseText)
+               console.log("error: " + error);
+           }
+       });
+       return;
+    }
+
+    function pass_check() {
+        var pass1 = $('#upass1').val();
+        var pass2 = $('#upass2').val();
+
+        if(pass1.length < 4 || pass2.length < 4)
+           {
+                return;
+           }
+
+        if (pass1 == pass2) {
+            $('#pass_msg').html("<font color='blue'>비밀번호 확인됨</font>");
+        }else {
+            $('#pass_msg').html("<font color='red'>비밀번호 서로 다름</font>");
+        }
+    }
+</script>
+
+
+</html>
