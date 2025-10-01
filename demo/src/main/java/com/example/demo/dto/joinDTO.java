@@ -9,15 +9,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class joinDTO {
-    private String uid;
-    private String upass1;
-    private String upass2;
-    private String uname;
-    private String sex;
-    private List<String> hobby;
+    private String userid;
+    private String pwd1;
+    private String pwd2;
+    private String name;
+    private String gender;
     private String yyyy;
     private String mm;
     private String dd;
+    private List<String> hobby;
+    private long member_rank;
     private MultipartFile upfile;
 
 }

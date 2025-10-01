@@ -5,14 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-아이디 : <span th:text="${uid}"></span><br>
-비밀번호 : <span th:text="${dto.upass1}"></span><br>
-이름 : <span th:text="${dto.Uname}"></span><br>
-성별 : <span th:text="${dto.sex}"></span><br>
-생일 : <span th:text="|${dto.yyyy} / ${dto.mm} / ${dto.dd}|"></span><br>
-취미 : <span th:each="item, stat : ${dto.hobby}">
-        <span th:text="${item}"></span><span th:unless="${stat.last}">, </span>
-    </span><br>
-파일 : <span th:text="|${fileName} / ${fileSize}bytes|"></span><br>
+
 </body>
 </html>
