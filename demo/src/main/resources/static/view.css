@@ -1,0 +1,143 @@
+/* 기본 설정 및 레이아웃 */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f6; /* 부드러운 배경색 */
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    /* 모든 내용을 세로로 정렬하고 중앙에 배치 */
+    flex-direction: column; 
+    align-items: center; 
+    min-height: 100vh;
+}
+
+/* 전체 컨테이너 (테이블과 버튼 영역을 묶는 상위 div) */
+.member-info-wrapper {
+    width: 100%;
+    max-width: 600px; /* 중앙 정렬 및 반응형 처리 */
+    margin-bottom: 20px;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* 테이블 제목 행 스타일 */
+table tr:first-child td {
+    background-color: #3f51b5; /* 헤더 배경색 (파란색) */
+    color: white;
+    font-weight: 700;
+    font-size: 1.2em;
+    text-align: center;
+    padding: 15px;
+    border-bottom: none;
+}
+
+/* 라벨 셀 (<th>) 스타일 */
+th {
+    background-color: #e8eaf6;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-align: left;
+    width: 35%;
+    color: #3f51b5;
+    border-right: 1px solid #c5cae9;
+}
+
+/* 값 셀 (<td>) 스타일 */
+table tr:not(:first-child) td {
+    padding: 12px 20px;
+    color: #333333;
+    text-align: left;
+    border-bottom: 1px solid #dddddd;
+}
+
+/* 홀수 행 배경색 지정 (가독성 향상) */
+table tr:not(:first-child):nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* 마우스 오버 시 행 스타일 변경 */
+table tr:not(:first-child):hover {
+    background-color: #e0e7ff;
+    transition: background-color 0.3s ease;
+    cursor: default;
+}
+
+/* 테이블의 마지막 행에는 경계선 없애기 */
+table tr:last-of-type td {
+    border-bottom: none;
+}
+
+/* ------------------------------------------- */
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    width: 100%;
+    max-width: 600px; /* 테이블 너비와 맞춤 */
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 오른쪽 끝으로 정렬 */
+    gap: 10px; /* 버튼 폼 사이에 간격 추가 */
+    padding-top: 20px;
+}
+
+/* 버튼 스타일 공통 설정 */
+.button-container form button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    outline: none;
+    min-width: 100px; /* 버튼 최소 너비 설정 */
+}
+
+/* 회원 수정 버튼 스타일 (Primary Action) */
+/* th:action="@{/member/edit}" 폼에 있는 버튼 */
+.button-container form:nth-child(2) button {
+    background-color: #3f51b5; /* 파란색 */
+    color: white;
+}
+
+/* 회원 수정 버튼 호버/클릭 시 효과 */
+.button-container form:nth-child(2) button:hover {
+    background-color: #303f9f; /* 어둡게 */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.button-container form:nth-child(2) button:active {
+    background-color: #283593;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 회원 삭제 버튼 스타일 (Warning Action) */
+/* th:action="@{/member/delete}" 폼에 있는 버튼 */
+.button-container form:nth-child(1) button {
+    background-color: #f44336; /* 빨간색 */
+    color: white;
+}
+
+/* 회원 삭제 버튼 호버/클릭 시 효과 */
+.button-container form:nth-child(1) button:hover {
+    background-color: #d32f2f; /* 어둡게 */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.button-container form:nth-child(1) button:active {
+    background-color: #c62828;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

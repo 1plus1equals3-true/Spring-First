@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class joinDTO {
+    private long idx;
     private String userid;
     private String pwd1;
     private String pwd2;

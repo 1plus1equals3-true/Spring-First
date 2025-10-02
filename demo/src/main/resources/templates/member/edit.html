@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>edit</title>
+    <link rel="stylesheet" href="/join.css">
+</head>
+<body>
+<form name="edit_form" action="/member/edit_proc" method="post" enctype="multipart/form-data">
+    <h2>회 원 수 정</h2>
+    <input type="hidden" name="idx" th:value="${member.idx}">
+    <table>
+        <tr>
+            <td>아이디</td>
+            <td><input type="text" name="userid" id="userid" onkeyup="id_check()" th:value="${member.userid}" readonly></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="text-align: center;"><span id="id_msg"></span></td>
+        </tr>
+
+        <tr>
+            <td>비밀번호</td>
+            <td><input type="password" name="pwd1" id="pwd1" onkeyup="pass_check()" th:value="${member.pwd1}"></td>
+        </tr>
+
+        <tr>
+            <td>비밀번호 확인</td>
+            <td><input type="password" name="pwd2" id="pwd2" onkeyup="pass_check()" th:value="${member.pwd2}"></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="text-align: center;"><span id="pass_msg"></span></td>
+        </tr>
+
+        <tr>
+            <td>이름</td>
+            <td><input type="text" name="name" th:value="${member.name}"></td>
+        </tr>
+
+        <tr>
+            <td>성별</td>
+            <td><input type="radio" name="gender" value="M" th:checked="${member.gender == 'M'}">남자
+                <input type="radio" name="gender" value="F" th:checked="${member.gender == 'F'}">여자</td>
+        </tr>
+
+        <tr>
+            <td>생일</td>
+            <td>
+                <select name="yyyy" id="selectYear">
+                    <option value="">년도</option>
+                </select><br><br>
+
+                <select name="mm" id="selectMonth">
+                    <option value="">월</option>
+                </select><br><br>
+
+                <select name="dd" id="selectDay">
+                    <option value="">일</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>취미</td>
+            <td><input type="checkbox" name="hobby" value="football" th:checked="${#strings.contains(member.hobby, 'football')}">축구
+                <input type="checkbox" name="hobby" value="basketball" th:checked="${#strings.contains(member.hobby, 'basketball')}">농구
+                <input type="checkbox" name="hobby" value="Volleyball" th:checked="${#strings.contains(member.hobby, 'Volleyball')}">배구</td>
+        </tr>
+
+        <tr>
+            <td>사진</td>
+            <td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <input type="button" value="수정" onclick="submit_check()">
+                <input type="reset" value="리셋">
+                <button type="button" onclick="history.back()">취소</button>
+            </td>
+        </tr>
+
+    </table>
+</form>
+
+<script type="text/javascript">
+    const memberBirthYear = '[[${member.birth.getYear()}]]';
+    const memberBirthMonth = '[[${member.birth.getMonthValue()}]]';
+    const memberBirthDay = '[[${member.birth.getDayOfMonth()}]]';
+
+   // 1. 현재 연도 가져오기
+   const currentYear = new Date().getFullYear();
+
+   // 2. 년도 범위 설정
+   const startYear = 1950; // 시작 연도 (가장 작은 값)
+   const endYear = currentYear; // 종료 연도 (가장 큰 값)
+
+   // 3. select 요소 가져오기
+   const selectYear = document.getElementById('selectYear');
+
+   // 4. 반복문으로 option 생성 및 추가 (오름차순: i를 증가시키면서 반복)
+   for (let i = startYear; i <= endYear; i++) {
+       // 새로운 option 요소 생성
+       const option = document.createElement('option');
+
+       // option의 value와 화면에 표시될 텍스트 설정
+       option.value = i;
+       option.text = i + '년';
+
+       // [추가된 로직]: 기존 값과 같으면 selected 설정
+    if (String(i) === memberBirthYear) {
+        option.selected = true;
+    }
+
+       // select 요소에 option 추가
+       selectYear.appendChild(option);
+   }
+
+// 월 생성 12월까지
+const selectMonth = document.getElementById('selectMonth');
+for (let i = 1; i <= 12; i++) {
+   const option = document.createElement('option');
+   // 앞에 0 붙이기
+   const displayValue = String(i).padStart(2, '0');
+
+   option.value = displayValue;
+   option.text = displayValue + '월';
+
+   // [추가된 로직]: 기존 값과 같으면 selected 설정
+    // JS에서 가져온 월 값(memberBirthMonth)을 두 자리 문자열로 변환하여 비교합니다.
+    if (displayValue === String(memberBirthMonth).padStart(2, '0')) {
+        option.selected = true;
+    }
+
+   selectMonth.appendChild(option);
+}
+
+// 일 생성 31일까지
+const selectDay = document.getElementById('selectDay');
+for (let i = 1; i <= 31; i++) {
+   const option = document.createElement('option');
+   // 앞에 0 붙이기
+   const displayValue = String(i).padStart(2, '0');
+
+   option.value = displayValue;
+   option.text = displayValue + '일';
+
+   // [추가된 로직]: 기존 값과 같으면 selected 설정
+    // JS에서 가져온 일 값(memberBirthDay)을 두 자리 문자열로 변환하여 비교합니다.
+    if (displayValue === String(memberBirthDay).padStart(2, '0')) {
+        option.selected = true;
+    }
+
+   selectDay.appendChild(option);
+}
+
+
+function submit_check() {
+           document.edit_form.submit();
+}
+</script>
+
+</body>
+</html>

@@ -15,16 +15,18 @@ CREATE TABLE `member` (
 	`pwd2` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`name` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`gender` CHAR(1) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`birth` DATETIME NOT NULL,
+	`birth` DATE NULL DEFAULT NULL,
 	`hobby` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
 	`regdate` DATETIME NULL DEFAULT NULL,
-	`rank` INT NULL DEFAULT '1',
+	`member_rank` INT NULL DEFAULT '1',
 	PRIMARY KEY (`idx`) USING BTREE,
 	UNIQUE INDEX `uid` (`userid`) USING BTREE
 )
 COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
+AUTO_INCREMENT=4
 ;
+
 
 ```
 

@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -31,11 +31,11 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
 
     private String gender;
 
-    private Date birth;
+    private LocalDate birth;
 
     private String hobby;
 
-    private Date regdate;
+    private LocalDateTime regdate;
 
     private long member_rank;
 }

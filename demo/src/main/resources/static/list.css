@@ -1,0 +1,65 @@
+/* 전체 페이지 및 기본 글꼴 설정 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6; /* 부드러운 배경색 */
+    margin: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* 테이블 기본 스타일 */
+table {
+    width: 100%; /* 너비 100%로 설정 */
+    max-width: 1200px; /* 최대 너비 지정 */
+    border-collapse: collapse; /* 경계선 합치기 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    background-color: #ffffff; /* 테이블 배경색 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    overflow: hidden; /* 모서리 둥글게 처리된 부분 처리 */
+}
+
+/* 테이블 헤더 (<thead>) 스타일 */
+thead tr {
+    background-color: #3f51b5; /* 헤더 배경색 (인텔리제이/구글 느낌의 파란색) */
+    color: white; /* 글자색 흰색 */
+    text-align: left;
+}
+
+/* 테이블 헤더 셀 (<th>) 스타일 */
+th {
+    padding: 12px 15px;
+    font-weight: 600; /* 글꼴 두께 */
+    text-transform: uppercase; /* 대문자로 변환 */
+    letter-spacing: 0.5px;
+}
+
+/* 테이블 본문 셀 (<td>) 스타일 */
+td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #dddddd; /* 아래쪽 경계선 */
+    color: #333333;
+}
+
+/* 홀수 행 배경색 지정 (가독성 향상) */
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+/* 마우스 오버 시 행 스타일 변경 (상호작용성 추가) */
+tbody tr:hover {
+    background-color: #e0e7ff; /* 마우스를 올리면 밝은 파란색으로 변경 */
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
+    cursor: pointer;
+}
+
+/* 테이블의 마지막 행에는 경계선 없애기 */
+tbody tr:last-of-type td {
+    border-bottom: none;
+}
+
+/* 특정 컬럼 너비 조정 (선택 사항) */
+/* 가입일처럼 내용이 긴 컬럼의 너비를 조정하면 좋습니다. */
+/* th:nth-child(7), td:nth-child(7) { width: 150px; } */
+/* th:nth-child(1), td:nth-child(1) { width: 80px; } */

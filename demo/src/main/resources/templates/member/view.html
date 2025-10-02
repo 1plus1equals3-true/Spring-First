@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>view</title>
+    <link rel="stylesheet" href="/view.css">
+</head>
+<body>
+
+<div class="member-info-wrapper">
+
+<div>
+<table>
+    <tr><td colspan="2">회 원 정 보</td></tr>
+    <tr>
+        <th>Idx</th>
+        <td th:text="${member.idx}"></td>
+    </tr>
+    <tr>
+        <th>아이디</th>
+        <td th:text="${member.userid}"></td>
+
+    <tr>
+        <th>비밀번호</th>
+        <td th:text="${member.pwd1}"></td>
+    </tr>
+    <tr>
+        <th>이름</th>
+        <td th:text="${member.name}"></td>
+    </tr>
+    <tr>
+        <th>성별</th>
+        <td th:text="${member.gender}"></td>
+    </tr>
+    <tr>
+        <th>생일</th>
+        <td th:text="${member.birth}"></td>
+    </tr>
+    <tr>
+        <th>취미</th>
+        <td th:text="${member.hobby}"></td>
+    </tr>
+    <tr>
+        <th>가입일</th>
+        <td th:text="${#temporals.format(member.regdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+    </tr>
+    <tr>
+        <th>등급</th>
+        <td th:text="${member.member_rank}"></td>
+    </tr>
+</table>
+</div>
+
+<div class="button-container">
+    <form th:action="@{/member/delete}" method="post" th:id="'deleteForm_' + ${member.idx}">
+        <input type="hidden" name="idx" th:value="${member.idx}" />
+        <button type="submit">회원 삭제</button>
+    </form>
+
+    <form th:action="@{/member/edit}" method="post" th:id="'editForm_' + ${member.idx}">
+        <input type="hidden" name="idx" th:value="${member.idx}" />
+        <button type="submit">회원 수정</button>
+    </form>
+</div>
+
+</div>
+
+<script th:inline="javascript">
+    document.getElementById('deleteForm_[[${member.idx}]]').addEventListener('submit', function(e) {
+        if (!confirm('정말로 이 회원을 삭제하시겠습니까?')) {
+            e.preventDefault(); // 취소 시 폼 제출 방지
+        }
+    });
+</script>
+
+</body>
+</html>

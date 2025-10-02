@@ -1,0 +1,48 @@
+// edit_proc 컨트롤러 내부
+if (dto.getPwd1() != null && !dto.getPwd1().isEmpty()) {
+    // 새 비밀번호가 입력되었다면
+    // 1. dto.getPwd1()과 dto.getPwd2()가 일치하는지 확인
+    // 2. 새로운 비밀번호를 해시하여 Entity에 저장 (기존 비밀번호 덮어쓰기)
+    memberEntity.setPwd1(passwordEncoder.encode(dto.getPwd1()));
+} else {
+    // 새 비밀번호가 입력되지 않았다면 (필드가 비어있다면)
+    // 기존 비밀번호를 그대로 유지
+}
+
+
+@PostMapping("/member/update_proc")
+public String update_proc(JoinDTO dto, Model model) {
+    // 1. 회원 ID로 기존 엔티티 조회 (생략)
+    // MemberEntity memberEntity = memberRepository.findById(dto.getId()).orElseThrow(...);
+
+    // 새 비밀번호가 입력된 경우에만 검사 및 업데이트를 시도합니다.
+    if (dto.getPwd1() != null && !dto.getPwd1().isEmpty()) {
+        
+        // **[핵심] pwd1과 pwd2가 일치하지 않는 경우**
+        if (!dto.getPwd1().equals(dto.getPwd2())) {
+            
+            // 1. 오류 메시지를 Model에 담습니다.
+            model.addAttribute("error", "비밀번호 확인이 일치하지 않습니다.");
+            
+            // 2. 사용자가 기존에 입력했던 다른 정보(이름, 성별 등)가 날아가지 않도록
+            //    DTO 자체를 Model에 담아 폼으로 돌려보냅니다.
+            model.addAttribute("member", dto); 
+            
+            // 3. 수정 폼으로 다시 돌아갑니다.
+            return "member/edit"; 
+        }
+
+        // 비밀번호가 일치하면:
+        // 4. 새로운 비밀번호를 해시하여 Entity에 저장
+        // memberEntity.setPwd1(passwordEncoder.encode(dto.getPwd1()));
+    }
+    
+    // 비밀번호 외 다른 필드 업데이트 및 최종 저장 로직 (생략)
+    
+    return "redirect:/member/list";
+}
+
+<span th:if="${error}" style="color: red; font-weight: bold;">
+    [[${error}]]
+</span>
+h2 회원 수정 위에 이거넣어서 에러 표시

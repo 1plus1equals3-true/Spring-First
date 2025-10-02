@@ -33,7 +33,7 @@ class DemoApplicationTests {
     }
 
     @Test
-    void ReadTest() {
+    void readTest() {
         List<MemberEntity> list = memberRepository.findAll();
         //System.out.println(list);
         System.out.println("------------");
@@ -44,12 +44,12 @@ class DemoApplicationTests {
     }
 
     @Test
-    void DeleteTest() {
+    void deleteTest() {
         memberRepository.deleteById(1L); // long타입이라 L붙임
     }
 
     @Test
-    void UpdateTest() {
+    void updateTest() {
 
         MemberEntity member = null;
 

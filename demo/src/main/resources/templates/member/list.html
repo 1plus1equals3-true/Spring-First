@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+    <link rel="stylesheet" href="/list.css">
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>Idx</th>
+        <th>아이디</th>
+        <th>비밀번호</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>생일</th>
+        <th>취미</th>
+        <th>가입일</th>
+        <th>등급</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${list}">
+        <td th:text="${member.idx}"></td>
+        <td><a th:href="@{/member/view(idx=${member.idx})}" th:text="${member.userid}"></a></td>
+        <td th:text="${member.pwd1}"></td>
+        <td th:text="${member.name}"></td>
+        <td th:text="${member.gender}"></td>
+        <td th:text="${member.birth}"></td>
+        <td th:text="${member.hobby}"></td>
+        <td th:text="${#temporals.format(member.regdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${member.member_rank}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
