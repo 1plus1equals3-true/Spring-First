@@ -16,53 +16,10 @@ class DemoApplicationTests {
     @Autowired
     MemberRepository memberRepository;
 
-	@Test
-	void contextLoads() {
-	}
 
     @Test
-    void saveTest() {
-        MemberEntity memberEntity = new MemberEntity();
-
-        memberEntity.setName("홍길동");
-        memberEntity.setPwd("1234");
-        memberEntity.setUserid("dong");
-        memberEntity.setRegdate(new Date());
-
-        memberRepository.save(memberEntity);
+    void test() {
+        MemberEntity memberEntity =  memberRepository.findByUserid("hong");
+        System.out.println(memberEntity);
     }
-
-    @Test
-    void readTest() {
-        List<MemberEntity> list = memberRepository.findAll();
-        //System.out.println(list);
-        System.out.println("------------");
-        for (MemberEntity m : list) {
-            System.out.println(m);
-            System.out.println("------------");
-        }
-    }
-
-    @Test
-    void deleteTest() {
-        memberRepository.deleteById(1L); // long타입이라 L붙임
-    }
-
-    @Test
-    void updateTest() {
-
-        MemberEntity member = null;
-
-        Optional<MemberEntity> opt = memberRepository.findById(12L); // long타입이라 L붙임
-        if(opt.isPresent()) {
-            member = opt.get();
-        }
-
-        System.out.println(member);
-        member.setName("길동");
-        member.setPwd("2345");
-
-        memberRepository.save(member);
-    }
-
 }

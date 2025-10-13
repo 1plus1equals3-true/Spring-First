@@ -38,4 +38,8 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
     private LocalDateTime regdate;
 
     private long member_rank;
+
+    private String originalfile;
+
+    private String dir;
 }

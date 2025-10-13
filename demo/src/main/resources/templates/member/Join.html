@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>회원가입</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="/join.css">
+<link rel="stylesheet" href="/css/join.css">
 </head>
 <body>
 	<form name="join_form" action="/member/Join_proc" method="post" enctype="multipart/form-data">
@@ -21,12 +21,12 @@
 		
 		<tr>
 		<td>비밀번호</td>
-		<td><input type="password" name="pwd1" id="pwd1" onkeyup="pass_check()"></td>
+		<td><input type="password" name="pwd1" id="pwd1" onkeyup="pwd_check()"></td>
 		</tr>
 		
 		<tr>
 		<td>비밀번호 확인</td>
-		<td><input type="password" name="pwd2" id="pwd2" onkeyup="pass_check()"></td>
+		<td><input type="password" name="pwd2" id="pwd2" onkeyup="pwd_check()"></td>
 		</tr>
 		
 		<tr>
@@ -85,59 +85,6 @@
 	</form>
 </body>
 
-<script type="text/javascript">
-        // 1. 현재 연도 가져오기
-        const currentYear = new Date().getFullYear();
-
-        // 2. 년도 범위 설정
-        const startYear = 1950; // 시작 연도 (가장 작은 값)
-        const endYear = currentYear; // 종료 연도 (가장 큰 값)
-
-        // 3. select 요소 가져오기
-        const selectYear = document.getElementById('selectYear');
-
-        // 4. 반복문으로 option 생성 및 추가 (오름차순: i를 증가시키면서 반복)
-        for (let i = startYear; i <= endYear; i++) {
-            // 새로운 option 요소 생성
-            const option = document.createElement('option');
-
-            // option의 value와 화면에 표시될 텍스트 설정
-            option.value = i;
-            option.text = i + '년';
-
-            // select 요소에 option 추가
-            selectYear.appendChild(option);
-        }
-
-    // 월 생성 12월까지
-    const selectMonth = document.getElementById('selectMonth');
-    for (let i = 1; i <= 12; i++) {
-        const option = document.createElement('option');
-        // 앞에 0 붙이기
-        const displayValue = String(i).padStart(2, '0');
-
-        option.value = displayValue;
-        option.text = displayValue + '월';
-        selectMonth.appendChild(option);
-    }
-
-    // 일 생성 31일까지
-    const selectDay = document.getElementById('selectDay');
-    for (let i = 1; i <= 31; i++) {
-        const option = document.createElement('option');
-        // 앞에 0 붙이기
-        const displayValue = String(i).padStart(2, '0');
-
-        option.value = displayValue;
-        option.text = displayValue + '일';
-        selectDay.appendChild(option);
-    }
-
-
-    function submit_check() {
-                document.join_form.submit();
-    }
-</script>
-
+<script type="text/javascript" src="/js/join.js"></script>
 
 </html>

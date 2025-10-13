@@ -5,22 +5,39 @@ import com.example.demo.entity.MemberEntity;
 import com.example.demo.repository.MemberRepository;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class MainController {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Value("${file.upload.base-dir}")
+    private String UPLOAD_BASE_DIR;
 
     @GetMapping(value = {"/","","/index"})
     public String home() {
@@ -46,10 +63,28 @@ public class MainController {
     }
 
     @GetMapping(value = {"/member/list"})
-    public String list(Model model) {
+    public String list(Model model,
+                       @RequestParam(value = "page", defaultValue = "1") int page) {
+
         System.out.println("list");
-        List<MemberEntity> list = memberRepository.findAll();
-        model.addAttribute("list", list);
+
+        int pageIndex = page - 1;
+
+        Pageable pageable = PageRequest.of(pageIndex, 10, Sort.Direction.DESC, "idx");
+        Page<MemberEntity> list = memberRepository.findAll(pageable);
+
+        int nowPage = page;
+        int totalPages = list.getTotalPages();
+
+        int startPage = Math.max(1, nowPage - 2);
+        int endPage = Math.min(totalPages, nowPage + 2);
+
+        model.addAttribute("list", list);         // 페이지 데이터
+        model.addAttribute("nowPage", nowPage);   // 현재 페이지
+        model.addAttribute("startPage", startPage); // 페이지 시작 번호
+        model.addAttribute("endPage", endPage);     // 페이지 끝 번호
+        model.addAttribute("totalPages", totalPages); // 전체 페이지 수
+
         return "member/list.html";
     }
 
@@ -82,7 +117,7 @@ public class MainController {
         return "member/edit.html";
     }
 
-    // DB수정은 되는데 뷰페이지로 안감 수정해야함
+
     @PostMapping(value = "/member/edit_proc")
     public String edit_proc(Model model,
                             joinDTO dto,
@@ -123,7 +158,7 @@ public class MainController {
 
         try{
             memberRepository.save(memberEntity);
-            return "redirect:/member/view";
+            return "redirect:/member/view?idx=" + memberEntity.getIdx();
         }catch (Exception e) {
             redirectAttributes.addFlashAttribute("msg", "수정오류");
             redirectAttributes.addFlashAttribute("url", "/member/list");
@@ -136,27 +171,60 @@ public class MainController {
                             @RequestParam(value="uid", defaultValue="default") String uid,
                             Model model,
                             RedirectAttributes redirectAttributes) {
-        /*
-        MultipartFile upfile = dto.getUpfile();
-
-        if (upfile != null && !upfile.isEmpty()) {
-            System.out.println("업로드된 파일 이름: " + upfile.getOriginalFilename());
-            System.out.println("업로드된 파일 크기: " + upfile.getSize() + " bytes");
-
-            try {
-                model.addAttribute("fileName", upfile.getOriginalFilename());
-                model.addAttribute("fileSize", upfile.getSize());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("업로드된 파일이 없습니다.");
-        }
-         */
 
         model.addAttribute("dto", dto);
 
+        MultipartFile upfile = dto.getUpfile();
         MemberEntity memberEntity = new MemberEntity();
+
+        String originalfile = null;
+        String dir = null;
+
+        if (upfile != null && !upfile.isEmpty()) {
+            try {
+                LocalDate today = LocalDate.now();
+                String dateString = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+                String relativeDirName = "Spring" + dateString;
+                String fullUploadPath = UPLOAD_BASE_DIR + relativeDirName;
+
+                File directory = new File(fullUploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 이름 중복 처리
+                String originalFilenameFromForm = upfile.getOriginalFilename();
+                String extension = "";
+                int dotIndex = originalFilenameFromForm.lastIndexOf(".");
+                if (dotIndex > 0) {
+                    extension = originalFilenameFromForm.substring(dotIndex);
+                }
+
+                String uuid = UUID.randomUUID().toString();
+                String storedFilename = uuid + extension; // UUID로 변경된 파일 이름
+
+                // 파일 저장
+                File dest = new File(fullUploadPath, storedFilename);
+                upfile.transferTo(dest);
+
+                originalfile = originalFilenameFromForm;
+                dir = relativeDirName + "/" + storedFilename;
+
+            } catch (IOException e) {
+                System.err.println("파일 저장 중 I/O 오류 발생: " + e.getMessage());
+                redirectAttributes.addFlashAttribute("msg", "파일 저장 오류");
+                redirectAttributes.addFlashAttribute("url", "/member/Join");
+                return "redirect:/error_page";
+            } catch (Exception e) {
+                System.err.println("기타 파일 업로드 오류: " + e.getMessage());
+            }
+        }
+
+        if (dir != null) {
+            memberEntity.setDir(dir);
+            memberEntity.setOriginalfile(originalfile);
+        }
 
         memberEntity.setUserid(dto.getUserid());
         memberEntity.setPwd1(dto.getPwd1());

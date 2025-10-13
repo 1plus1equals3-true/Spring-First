@@ -4,8 +4,8 @@ body {
     background-color: #f4f7f6; /* 부드러운 배경색 */
     margin: 40px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
 }
 
@@ -18,6 +18,8 @@ table {
     background-color: #ffffff; /* 테이블 배경색 */
     border-radius: 8px; /* 모서리 둥글게 */
     overflow: hidden; /* 모서리 둥글게 처리된 부분 처리 */
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 /* 테이블 헤더 (<thead>) 스타일 */
