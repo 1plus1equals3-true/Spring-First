@@ -19,7 +19,7 @@ class DemoApplicationTests {
 
     @Test
     void test() {
-        MemberEntity memberEntity =  memberRepository.findByUserid("hong");
+        List<MemberEntity> memberEntity =  memberRepository.findByUseridContaining("hong");
         System.out.println(memberEntity);
     }
 }

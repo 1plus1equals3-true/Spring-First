@@ -70,9 +70,21 @@
         </tr>
 
         <tr>
-            <td>사진</td>
+            <td>현재 사진</td>
+            <td th:if="${member.dir != null and member.dir != ''}">
+                <span th:text="${member.originalfile}"></span>
+                <input type="checkbox" name="deleteFile" value="true"> 파일 삭제
+            </td>
+            <td th:unless="${member.dir != null and member.dir != ''}">
+                파일 없음
+            </td>
+        </tr>
+
+        <tr>
+            <td>사진 교체</td>
             <td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
         </tr>
+
 
         <tr>
             <td colspan="2" style="text-align: center;">

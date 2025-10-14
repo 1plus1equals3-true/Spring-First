@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "member")
-public class MemberEntity { //물리DB와 칼럼이 동일해야함
+@Table(name = "board")
+public class BoardEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,24 +23,19 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
 
     private String userid;
 
-    private String pwd1;
-
-    private String pwd2;
-
     private String name;
 
-    private String gender;
+    private String pwd;
 
-    private LocalDate birth;
+    private String title;
 
-    private String hobby;
+    private String content;
+
+    private long hit;
 
     private LocalDateTime regdate;
 
-    @Column(name = "member_rank")
-    private long memberRank;
+    private String ip;
 
-    private String originalfile;
-
-    private String dir;
+    private long boardtype;
 }

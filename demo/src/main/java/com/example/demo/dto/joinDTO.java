@@ -21,5 +21,6 @@ public class joinDTO {
     private List<String> hobby;
     private long member_rank;
     private MultipartFile upfile;
+    private Boolean deleteFile; // 파일 삭제 확인
     //private String idCheckResult; // "y" 또는 "n" 값 dto이용한 json으로 받을때 사용
 }

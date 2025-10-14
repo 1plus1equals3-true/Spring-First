@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" href="/css/board/write.css">
+</head>
+<body>
+
+<section class="min-height">
+    <h1>글쓰기</h1><br>
+    <form action="/board/write_proc" method="post" enctype="multipart/form-data" class="write-form">
+        <table>
+            <!-- 회원 비회원 구분 -->
+            <tr>
+                <td>작성자</td>
+                <td><input type="text" name="name"></td>
+            </tr>
+
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="text" name="pwd"></td>
+            </tr>
+
+
+            <!-- 공지사항 체크 부분 -->
+            <tr>
+                <td>공지사항</td>
+                <td><input type="checkbox" name="Noticemode"></td>
+            </tr>
+
+            <!-- 메인 -->
+            <tr>
+                <td>제목</td>
+                <td><input type="text" name="title"></td>
+            </tr>
+
+            <tr>
+                <td>내용</td>
+                <td>
+                    <textarea class="text" name="content"></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td>파일</td>
+                <td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="작성">
+                    <button type="button" class="btn-cancel" onclick="history.back()">취소</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</section>
+
+</body>
+</html>

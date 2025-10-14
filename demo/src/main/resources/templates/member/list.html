@@ -11,6 +11,8 @@
 </head>
 <body>
 
+<th:block th:replace="~{/fragments/header :: header}"></th:block>
+
 <table>
     <thead>
     <tr>
@@ -35,28 +37,43 @@
         <td th:text="${member.birth}"></td>
         <td th:text="${member.hobby}"></td>
         <td th:text="${#temporals.format(member.regdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td th:text="${member.member_rank}"></td>
+        <td th:text="${member.memberRank}"></td>
     </tr>
     </tbody>
 </table>
 
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation" th:if="${totalPages > 0}">
     <ul class="pagination justify-content-center">
-
         <li class="page-item" th:classappend="${list.first} ? 'disabled' : ''">
-            <a class="page-link" th:href="@{/member/list(page=${nowPage - 1})}" tabindex="-1">Previous</a>
+            <a class="page-link" th:href="@{/member/list(page=${nowPage - 1}, key=${key}, word=${word})}" tabindex="-1">Previous</a>
         </li>
 
         <li class="page-item" th:each="num : ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${num == nowPage} ? 'active' : ''">
-            <a class="page-link" th:href="@{/member/list(page=${num})}" th:text="${num}">1</a>
+            <a class="page-link" th:href="@{/member/list(page=${num}, key=${key}, word=${word})}" th:text="${num}">1</a>
         </li>
 
         <li class="page-item" th:classappend="${list.last} ? 'disabled' : ''">
-            <a class="page-link" th:href="@{/member/list(page=${nowPage + 1})}" >Next</a>
+            <a class="page-link" th:href="@{/member/list(page=${nowPage + 1}, key=${key}, word=${word})}" >Next</a>
         </li>
     </ul>
 </nav>
+
+<div th:if="${list.isEmpty()}" class="alert alert-info text-center mt-3" role="alert">
+    검색 결과가 없습니다.
+</div>
+
+<form name="search_form" method="get" class="search-form">
+    <select name="key">
+        <option value="userid" th:selected="${key == 'userid'}">ID</option>
+        <option value="name" th:selected="${key == 'name'}">이름</option>
+        <option value="hobby" th:selected="${key == 'hobby'}">취미</option>
+    </select>
+    <input type="text" name="word" th:value="${word}">
+    <button type="submit">검색</button>
+</form>
+
+<th:block th:replace="~{/fragments/footer :: footer}"></th:block>
 
 </body>
 </html>
