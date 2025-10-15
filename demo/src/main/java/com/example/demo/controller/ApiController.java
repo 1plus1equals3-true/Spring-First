@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.joinDTO;
 import com.example.demo.entity.MemberEntity;
 import com.example.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

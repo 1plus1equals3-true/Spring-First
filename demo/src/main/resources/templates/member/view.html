@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}"
+      lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>view</title>
-    <link rel="stylesheet" href="/css/view.css">
-</head>
-<body>
 
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/view.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
 <div class="member-info-wrapper">
 
 <div>
@@ -64,7 +70,9 @@
 </div>
 
 </div>
+</div>
 
+<th:block layout:fragment="extra-script">
 <script th:inline="javascript">
     document.getElementById('deleteForm_[[${member.idx}]]').addEventListener('submit', function(e) {
         if (!confirm('정말로 이 회원을 삭제하시겠습니까?')) {
@@ -72,6 +80,6 @@
         }
     });
 </script>
+</th:block>
 
-</body>
 </html>

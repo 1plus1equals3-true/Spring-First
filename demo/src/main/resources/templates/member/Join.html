@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}"
+      lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="/css/join.css">
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+    <link rel="stylesheet" href="/css/join.css">
 </head>
-<body>
+<div layout:fragment="content">
 	<form name="join_form" action="/member/Join_proc" method="post" enctype="multipart/form-data">
 		<h2>회 원 가 입</h2>
 		<table>
@@ -83,8 +86,11 @@
 		
 		</table>
 	</form>
-</body>
+</div>
 
+<th:block layout:fragment="extra-script">
 <script type="text/javascript" src="/js/join.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</th:block>
 
 </html>

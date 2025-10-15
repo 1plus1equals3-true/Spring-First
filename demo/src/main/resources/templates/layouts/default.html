@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <!-- 타이틀 (컨텐츠타이틀 | 레이아웃타이틀) -->
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">멤버</title>
+    <!-- 레이아웃의 기본 css -->
+    <link rel="stylesheet" th:href="@{/css/layout/default.css}">
+
+    <!-- 컨텐츠에 추가된 css 영역 ㅇㅇ -->
+    <th:block layout:fragment="extra-css"></th:block>
+</head>
+<body>
+<!-- header파일의 헤더 불러오기 -->
+<div th:replace="~{fragments/header::header}"></div>
+
+<!-- 컨텐츠 영역 ㅇㅇ -->
+<div id="default_contents" layout:fragment="content"></div>
+
+<!-- footer파일의 푸터 불러우기 -->
+<div th:replace="~{fragments/footer::footer}"></div>
+
+<!-- 컨텐츠에 추가된 js 영역 ㅇㅇ -->
+<th:block layout:fragment="extra-script"></th:block>
+</body>
+</html>

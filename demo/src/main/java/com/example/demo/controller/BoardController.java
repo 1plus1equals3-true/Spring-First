@@ -1,33 +1,18 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.boardDTO;
-import com.example.demo.dto.joinDTO;
+import com.example.demo.dto.BoardDTO;
 import com.example.demo.entity.BoardEntity;
-import com.example.demo.entity.MemberEntity;
 import com.example.demo.repository.BoardRepository;
-import com.example.demo.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class BoardController {
@@ -45,7 +30,7 @@ public class BoardController {
     }
 
     @PostMapping(value = "/board/write_proc")
-    public String Join_proc(boardDTO dto,
+    public String Join_proc(BoardDTO dto,
                             Model model,
                             RedirectAttributes redirectAttributes,
                             HttpServletRequest request) {

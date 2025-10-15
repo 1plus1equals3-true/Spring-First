@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+    <title>11</title>
+
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/content-specific.css}">
+    </th:block>
+</head>
+
+<!-- layout1.html 파일의 <div layout:fragment="content"> 영역에 들어가는 영역 -->
+<div layout:fragment="content">
+    <form name="join_form" action="/member/Join_proc" method="post" enctype="multipart/form-data">
+        <h2>회 원 가 입</h2>
+        <table>
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" name="userid" id="userid" onkeyup="id_check()"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align: center;"><span id="id_msg"></span></td>
+            </tr>
+
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" name="pwd1" id="pwd1" onkeyup="pwd_check()"></td>
+            </tr>
+
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input type="password" name="pwd2" id="pwd2" onkeyup="pwd_check()"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align: center;"><span id="pass_msg"></span></td>
+            </tr>
+
+            <tr>
+                <td>이름</td>
+                <td><input type="text" name="name"></td>
+            </tr>
+
+            <tr>
+                <td>성별</td>
+                <td><input type="radio" name="gender" value="M" checked="checked">남자
+                    <input type="radio" name="gender" value="F">여자</td>
+            </tr>
+
+            <tr>
+                <td>생일</td>
+                <td>
+                    <select name="yyyy" id="selectYear">
+                        <option value="">년도</option>
+                    </select><br><br>
+
+                    <select name="mm" id="selectMonth">
+                        <option value="">월</option>
+                    </select><br><br>
+
+                    <select name="dd" id="selectDay">
+                        <option value="">일</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>취미</td>
+                <td><input type="checkbox" name="hobby" value="football">축구
+                    <input type="checkbox" name="hobby" value="basketball">농구
+                    <input type="checkbox" name="hobby" value="Volleyball">배구</td>
+            </tr>
+
+            <tr>
+                <td>사진</td>
+                <td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="button" value="가입" onclick="submit_check()">
+                    <input type="reset" value="리셋">
+                    <button type="button" onclick="history.back()">취소</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+</html>

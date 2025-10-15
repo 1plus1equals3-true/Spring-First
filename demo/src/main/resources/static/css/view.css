@@ -1,16 +1,3 @@
-/* 기본 설정 및 레이아웃 */
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f4f7f6; /* 부드러운 배경색 */
-    margin: 0;
-    padding: 40px 20px;
-    display: flex;
-    /* 모든 내용을 세로로 정렬하고 중앙에 배치 */
-    flex-direction: column; 
-    align-items: center; 
-    min-height: 100vh;
-}
-
 /* 전체 컨테이너 (테이블과 버튼 영역을 묶는 상위 div) */
 .member-info-wrapper {
     width: 100%;
