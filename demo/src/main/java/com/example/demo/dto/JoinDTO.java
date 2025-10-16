@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import com.example.demo.entity.MemberEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class JoinDTO {
@@ -29,11 +31,15 @@ public class JoinDTO {
     private Boolean deleteFile; // 파일 삭제 확인
     //private String idCheckResult; // "y" 또는 "n" 값 dto이용한 json으로 받을때 사용
 
+    private LocalDate birth;
+    private String edithobby;
+    private String originalfile;
+    private String dir;
+
     public MemberEntity toEntity(String dir, String originalfile) {
         return MemberEntity.builder()
                 .userid(userid)
-                .pwd1(pwd1)
-                .pwd2(pwd2)
+                .pwd(pwd1)
                 .name(name)
                 .gender(gender)
                 .birth(LocalDate.of(

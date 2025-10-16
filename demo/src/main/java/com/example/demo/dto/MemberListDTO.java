@@ -1,12 +1,26 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.MemberEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MemberListDTO {
-    //리스트에 필요한 데이터 담는곳
+    // Controller -> Service
+    private int page;       // 현재 페이지 번호
+    private String key;
+    private String word;
+
+    // Service -> Controller
+    private Page<MemberEntity> list;    // 페이지네이션된 회원 엔티티 목록
+    private int nowPage;                // 현재 페이지
+    private int startPage;              // 페이지 블록 시작 번호
+    private int endPage;                // 페이지 블록 끝 번호
+    private int totalPages;             // 전체 페이지 수
 }

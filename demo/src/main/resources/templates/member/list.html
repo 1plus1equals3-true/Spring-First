@@ -31,7 +31,7 @@
     <tr th:each="member : ${list}">
         <td th:text="${member.idx}"></td>
         <td><a th:href="@{/member/view(idx=${member.idx})}" th:text="${member.userid}"></a></td>
-        <td th:text="${member.pwd1}"></td>
+        <td th:text="${member.pwd}"></td>
         <td th:text="${member.name}"></td>
         <td th:text="${member.gender}"></td>
         <td th:text="${member.birth}"></td>

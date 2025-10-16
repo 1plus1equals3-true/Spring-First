@@ -23,9 +23,7 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
 
     private String userid;
 
-    private String pwd1;
-
-    private String pwd2;
+    private String pwd;
 
     private String name;
 
@@ -43,4 +41,20 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
     private String originalfile;
 
     private String dir;
+
+//    public JoinDTO toDTO() {
+//        return JoinDTO.builder()
+//                .idx(idx)
+//                .userid(this.userid)
+//                .pwd1(pwd)
+//                .pwd2(pwd)
+//                .name(name)
+//                .gender(gender)
+//                .birth(birth)
+//                .edithobby(hobby)
+//                .member_rank(memberRank)
+//                .originalfile(originalfile)
+//                .dir(dir)
+//                .build();
+//    }
 }

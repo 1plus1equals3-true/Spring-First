@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
@@ -44,7 +44,20 @@
 
             <tr>
                 <td>파일</td>
-                <td><input type="file" name="upfile" accept=".gif, .jpg, .png"></td>
+                <td class="file-upload-container">
+                    <button type="button" id="fileUploadButton">파일 선택 (최대 5개)</button>
+
+                    <!-- name="files"로 설정하여 List<MultipartFile>로 바인딩 -->
+                    <input type="file"
+                           name="files"
+                           id="hiddenFileInput"
+                           multiple
+                           accept=".gif, .jpg, .png">
+
+                    <div id="fileList">선택된 파일 없음</div>
+                    <!-- 오류 메시지 영역 -->
+                    <div id="errorMessage" class="error-message"></div>
+                </td>
             </tr>
 
             <tr>
@@ -57,6 +70,8 @@
         </table>
     </form>
 </section>
+
+<script type="text/javascript" src="/js/write.js"></script>
 
 </body>
 </html>
