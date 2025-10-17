@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.dto.JoinDTO;
-import com.example.demo.dto.MemberListDTO;
+import com.example.demo.dto.ListPageDTO;
 import com.example.demo.dto.MemberViewDTO;
 import com.example.demo.entity.MemberEntity;
 import com.example.demo.repository.MemberRepository;
@@ -88,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberListDTO list(MemberListDTO dto) {
+    public ListPageDTO list(ListPageDTO dto) {
         System.out.println("---------------> MemberService list");
 
         int page = dto.getPage();
@@ -138,8 +138,8 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 4. 조회 결과 및 페이지네이션 정보를 DTO에 담아 반환
-        MemberListDTO listDto = MemberListDTO.builder()
-                .list(list) // 페이지 데이터
+        ListPageDTO listDto = ListPageDTO.builder()
+                .memberList(list) // 페이지 데이터
                 .nowPage(nowPage) // 현재 페이지
                 .startPage(startPage) // 페이지 블록 시작 번호
                 .endPage(endPage) // 페이지 블록 끝 번호

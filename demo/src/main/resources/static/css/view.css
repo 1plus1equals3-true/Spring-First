@@ -5,6 +5,12 @@
     margin-bottom: 20px;
 }
 
+.board-info-wrapper {
+    width: 100%;
+    max-width: 1000px; /* 중앙 정렬 및 반응형 처리 */
+    margin-bottom: 20px;
+}
+
 /* 테이블 스타일 */
 table {
     width: 100%;
@@ -65,7 +71,7 @@ table tr:last-of-type td {
 
 /* ------------------------------------------- */
 
-/* 버튼 컨테이너 스타일 */
+/* member view를 위한 버튼 컨테이너 */
 .button-container {
     width: 100%;
     max-width: 600px; /* 테이블 너비와 맞춤 */
@@ -127,4 +133,50 @@ table tr:last-of-type td {
     background-color: #c62828;
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* board view를 위한 버튼 그룹 */
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-group button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 4px;
+}
+
+.button-group .btn-modify {
+    background-color: #ffc107;
+    color: #343a40;
+}
+
+.button-group .btn-modify:hover {
+    background-color: #e0a800;
+}
+
+.button-group .btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.button-group .btn-delete:hover {
+    background-color: #c82333;
+}
+
+.button-group .btn-list {
+    background-color: #007bff;
+    color: white;
+}
+
+.button-group .btn-list:hover {
+    background-color: #0056b3;
 }

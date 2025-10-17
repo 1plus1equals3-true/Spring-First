@@ -1,0 +1,59 @@
+.wwrite {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.wwrite:hover {
+    background-color: #0056b3;
+}
+.board-table {
+    width: 80%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 0 auto;
+}
+
+.board-table th, .board-table td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+/* 첫 번째 행 (헤더) 강조 및 호버 효과 제거 */
+.board-table thead tr {
+    background-color: #4CAF50; /* 더 진한 배경색 */
+    color: white; /* 글씨색을 흰색으로 변경 */
+    font-size: 15px;
+}
+
+/* 본문 (tbody) 행 스타일 */
+.board-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.board-table tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+.board-table a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.board-table a:hover {
+    text-decoration: underline;
+}
+.td50 {
+    width: 50%;
+}
+.td10 {
+    width: 10%;
+}
+.td20 {
+    width: 20%;
+}

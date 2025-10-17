@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}"
+      lang="ko">
+<head>
+    <title>modify</title>
+
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/board/write.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+
+<h1>글 수정</h1><br>
+<form th:action="@{/board/modify_proc}" method="post" enctype="multipart/form-data" class="write-form">
+    <input type="hidden" name="idx" th:value="${board.idx}">
+    <input type="hidden" name="ip" th:value="${board.ip}">
+    <table>
+
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="writetitle" th:value="${board.title}"></td>
+        </tr>
+
+        <tr>
+            <td>내용</td>
+            <td>
+                <textarea class="text" name="writetext" th:text="${board.content}"></textarea>
+            </td>
+        </tr>
+
+        <tr>
+            <td>파일</td>
+            <td>
+                파일 처리부분
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="수정">
+                <a th:href="@{/board/view(idx=${board.idx})}"><button type="button" class="btn-cancel">취소</button></a>
+            </td>
+        </tr>
+
+    </table>
+</form>
+
+</div>
+</html>

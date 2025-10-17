@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}"
+      lang="ko">
+<head>
+    <title>view</title>
+
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/view.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+    <div class="board-info-wrapper">
+<h1>작성 글</h1><br>
+
+<table class="view-table">
+
+    <tr>
+        <td colspan="4" th:text="${board.title}"></td>
+    </tr>
+
+    <tr>
+        <td th:text="'작성자 : ' + ${board.name}"></td>
+        <td th:text="'작성일자 : ' + ${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="'조회수 : ' + ${board.hit}"></td>
+        <td th:text="'IP : ' + ${board.ip}"></td>
+    </tr>
+
+    <tr>
+        <td colspan="4">
+            <div style="min-height: 200px; text-align: left;" th:utext="${#strings.replace(board.content, #strings.toString(#strings.unescapeJava('\r\n')), '<br>')}">게시글 내용</div>
+        </td>
+    </tr>
+
+    <tr>
+        <td>첨부 파일</td>
+        <td colspan="3"><p>현재파일 이름 보여주는 부분</p><br>
+            <a href="다운로드_주소_적기" class="download" target="_blank">다운로드</a>
+        </td>
+    </tr>
+
+</table>
+<br>
+
+    <div class="button-group">
+        <form th:action="@{/board/modify}" method="post" th:id="'modifyForm_' + ${board.idx}">
+            <input type="hidden" name="idx" th:value="${board.idx}" />
+            <button type="submit" class="btn-modify">수정</button>
+        </form>
+
+        <form th:action="@{/board/delete}" method="post" th:id="'deleteForm_' + ${board.idx}">
+            <input type="hidden" name="idx" th:value="${board.idx}" />
+            <button type="submit" class="btn-delete">삭제</button>
+        </form>
+
+        <button type="button" class="btn-list" onclick="history.back()">목록</button>
+    </div>
+
+    </div>
+</div>
+
+</html>

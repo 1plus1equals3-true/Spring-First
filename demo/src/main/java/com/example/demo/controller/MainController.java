@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.JoinDTO;
-import com.example.demo.dto.MemberListDTO;
+import com.example.demo.dto.ListPageDTO;
 import com.example.demo.dto.MemberViewDTO;
 import com.example.demo.services.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -56,15 +56,15 @@ public class MainController {
         System.out.println("---------------> list");
 
         // 서비스로 넘길 DTO 생성
-        MemberListDTO requestDto = new MemberListDTO();
+        ListPageDTO requestDto = new ListPageDTO();
         requestDto.setPage(page);
         requestDto.setKey(key);
         requestDto.setWord(word);
 
         // 서비스에 로직 위임후 DTO를 반환
-        MemberListDTO listDto = memberService.list(requestDto);
+        ListPageDTO listDto = memberService.list(requestDto);
 
-        model.addAttribute("list", listDto.getList());              // 페이지 데이터
+        model.addAttribute("list", listDto.getMemberList());        // 페이지 데이터
         model.addAttribute("nowPage", listDto.getNowPage());        // 현재 페이지
         model.addAttribute("startPage", listDto.getStartPage());    // 페이지 시작 번호
         model.addAttribute("endPage", listDto.getEndPage());        // 페이지 끝 번호
