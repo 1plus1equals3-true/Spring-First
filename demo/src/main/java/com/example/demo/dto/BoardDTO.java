@@ -27,4 +27,6 @@ public class BoardDTO {
     private Boolean deleteFile; // 파일 삭제 확인
 
     private LocalDateTime regDate; // view용
+
+    private List<BoardAttachmentDTO> attachments; // 현재 게시글 첨부파일 확인
 }

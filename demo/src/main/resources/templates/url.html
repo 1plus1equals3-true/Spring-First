@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/default}">
+<head>
+    <title>url</title>
+</head>
+
+<div layout:fragment="content">
+    <form name="url_form" action="/url_proc" method="post">
+        <input type="text" name="imageUrl" placeholder="이미지 URL을 입력하세요">
+        <input type="submit" value="제출">
+    </form>
+</div>
+</html>

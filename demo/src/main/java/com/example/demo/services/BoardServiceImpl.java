@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.BoardAttachmentDTO;
 import com.example.demo.dto.BoardDTO;
 import com.example.demo.dto.ListPageDTO;
 import com.example.demo.entity.BoardAttachmentEntity;
@@ -140,12 +141,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public BoardDTO view(long idx) {
         System.out.println("---------------> BoardService view " + idx);
 
         // 데이터 조회
         BoardEntity boardEntity = boardRepository.findById(idx)
                 .orElseThrow(() -> new NoSuchElementException("해당 idx(" + idx + ")의 게시글을 찾을 수 없습니다."));
+
+        long currentHit = boardEntity.getHit();
+        boardEntity.setHit(currentHit + 1);
 
         // Entity를 DTO로 변환
         BoardDTO boardDTO = BoardDTO.builder()
@@ -157,6 +162,12 @@ public class BoardServiceImpl implements BoardService {
                 .ip(boardEntity.getIp())
                 .content(boardEntity.getContent())
                 .build();
+
+        List<BoardAttachmentEntity> attachmentEntities = boardAttachmentRepository.findByBidx(idx);
+        List<BoardAttachmentDTO> attachmentDTOs = attachmentEntities.stream()
+                .map(this::convertAttachmentToDTO)
+                .collect(Collectors.toList());
+        boardDTO.setAttachments(attachmentDTOs);
 
         // DTO 반환
         return boardDTO;
@@ -214,9 +225,79 @@ public class BoardServiceImpl implements BoardService {
                 .ip(boardEntity.getIp())
                 .title(boardEntity.getTitle())
                 .content(boardEntity.getContent())
+                .name(boardEntity.getName()) // 일단 담아둬
                 .build();
 
+        // 첨부파일 조회
+        List<BoardAttachmentEntity> attachmentEntities = boardAttachmentRepository.findByBidx(idx);
+
+        // 엔티티 리스트를 DTO 리스트로
+        List<BoardAttachmentDTO> attachmentDTOs = attachmentEntities.stream()
+                .map(this::convertAttachmentToDTO)
+                .collect(Collectors.toList());
+
+        // boardDTO에 첨부파일 설정
+        dto.setAttachments(attachmentDTOs);
+
         return dto;
+    }
+
+    @Override
+    @Transactional
+    public void modifyProc(BoardDTO dto) {
+        System.out.println("---------------> BoardService modifyProc: " + dto.getIdx());
+
+        BoardEntity boardEntity = boardRepository.findById(dto.getIdx())
+                .orElseThrow(() -> new NoSuchElementException("수정할 게시글(idx: " + dto.getIdx() + ")을 찾을 수 없습니다."));
+
+        // 게시글 내용 수정
+        boardEntity.setTitle(dto.getTitle());
+        boardEntity.setContent(dto.getContent());
+
+        // 파일 수정 처리
+        if (dto.getFiles() != null && !dto.getFiles().isEmpty() &&
+                dto.getFiles().stream().anyMatch(file -> !file.isEmpty())) {
+
+            // 기존 첨부파일 삭제
+            List<BoardAttachmentEntity> existingAttachments = boardAttachmentRepository.findByBidx(dto.getIdx());
+
+            if (!existingAttachments.isEmpty()) {
+
+                // 파일 삭제
+                for (BoardAttachmentEntity attachment : existingAttachments) {
+                    String fileDir = attachment.getDir();
+                    File attachedFile = new File(UPLOAD_BASE_DIR, fileDir);
+
+                    if (attachedFile.exists()) {
+                        if (!attachedFile.delete()) {
+                            // 파일 시스템 삭제 실패 시 롤백을 위해 RuntimeException 발생
+                            throw new RuntimeException("기존 파일 시스템 삭제 실패: " + fileDir);
+                        }
+                    }
+                }
+
+                // DB에서 첨부파일 엔티티 삭제
+                boardAttachmentRepository.deleteAll(existingAttachments);
+                System.out.println("기존 첨부파일 " + existingAttachments.size() + "개 삭제 완료.");
+            }
+
+            // 새로운 첨부파일 저장
+            List<MultipartFile> validFiles = dto.getFiles().stream()
+                    .filter(file -> !file.isEmpty())
+                    .collect(Collectors.toList());
+
+            if (!validFiles.isEmpty()) {
+                if (validFiles.size() > 5) {
+                    throw new RuntimeException("첨부 파일은 최대 5개까지만 허용됩니다.");
+                }
+
+                processAttachments(dto.getIdx(), validFiles);
+            }
+
+        } else if (dto.getFiles() != null && dto.getFiles().stream().allMatch(MultipartFile::isEmpty)) {
+            // 파일을 선택하지 않은 경우 기존 파일 유지
+            System.out.println("새로운 첨부파일 없음. 기존 파일 유지.");
+        }
     }
 
     private void processAttachments(long bidx, List<MultipartFile> files) {
@@ -266,4 +347,13 @@ public class BoardServiceImpl implements BoardService {
             }
         }
     }
+    private BoardAttachmentDTO convertAttachmentToDTO(BoardAttachmentEntity entity) {
+        return BoardAttachmentDTO.builder()
+                .idx(entity.getIdx())
+                .bidx(entity.getBidx())
+                .originalfile(entity.getOriginalfile())
+                .dir(entity.getDir())
+                .build();
+    }
 }
+

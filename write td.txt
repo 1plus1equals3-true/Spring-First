@@ -1,0 +1,30 @@
+글 작성 write의 글 내용 부분 td에 들어가는 내용
+
+tiptap
+<div id="tiptap-toolbar"></div>
+                    <div id="tiptap-editor-container" class="tiptap-editor-container"></div>
+                    <input type="hidden" name="content" id="editor-content-hidden">
+
+CKeditor
+<script src="https://cdn.ckeditor.com/ckeditor5/29.1.0/classic/ckeditor.js"></script>
+
+                    <style>
+                        .ck.ck-editor {
+                            max-width: 500px;
+                        }
+                        .ck-editor__editable {
+                            min-height: 300px;
+                        }
+                    </style>
+
+
+                    <div id="classic">
+                        <p>This is some sample content.</p>
+                    </div>
+                    <script>
+                        ClassicEditor
+                            .create( document.querySelector( '#classic' ))
+                            .catch( error => {
+                            console.error( error );
+                        } );
+                    </script>

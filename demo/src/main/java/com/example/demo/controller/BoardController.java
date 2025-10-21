@@ -148,6 +148,39 @@ public class BoardController {
         }
     }
 
+    @PostMapping(value = "/board/modify_proc")
+    public String modify_proc(BoardDTO dto,
+                              RedirectAttributes redirectAttributes) {
+
+        System.out.println("---------------> modify_proc " + dto.getIdx());
+
+        try {
+            boardService.modifyProc(dto);
+
+            return "redirect:/board/view?idx=" + dto.getIdx();
+
+        } catch (NoSuchElementException e) {
+            // 게시글을 찾을 수 없을 때
+            redirectAttributes.addFlashAttribute("msg", "수정할 게시글을 찾을 수 없습니다.");
+            redirectAttributes.addFlashAttribute("url", "/board/list");
+            return "redirect:/error_page";
+
+        } catch (RuntimeException e) {
+            // 파일 처리 등의 비즈니스 로직 오류
+            System.err.println("게시글 수정 중 오류 발생: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("msg", e.getMessage());
+            redirectAttributes.addFlashAttribute("url", "/board/modify?idx=" + dto.getIdx());
+            return "redirect:/error_page";
+
+        } catch (Exception e) {
+            // 기타 DB 또는 파일 처리 중 발생하는 모든 예외
+            System.err.println("게시글 수정 중 예외 발생: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("msg", "게시글 수정 처리 중 오류가 발생했습니다.");
+            redirectAttributes.addFlashAttribute("url", "/board/view?idx=" + dto.getIdx());
+            return "redirect:/error_page";
+        }
+    }
+
     @GetMapping(value = {"/board/write"})
     public String write() {
         System.out.println("---------------> write");

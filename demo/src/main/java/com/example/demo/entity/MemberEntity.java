@@ -42,6 +42,9 @@ public class MemberEntity { //물리DB와 칼럼이 동일해야함
 
     private String dir;
 
+//    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+//    private List<BoardEntity> board = new ArrayList<>();
+
 //    public JoinDTO toDTO() {
 //        return JoinDTO.builder()
 //                .idx(idx)

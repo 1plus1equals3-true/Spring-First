@@ -21,20 +21,29 @@
 
         <tr>
             <td>제목</td>
-            <td><input type="text" name="writetitle" th:value="${board.title}"></td>
+            <td><input type="text" name="title" th:value="${board.title}"></td>
         </tr>
 
         <tr>
             <td>내용</td>
             <td>
-                <textarea class="text" name="writetext" th:text="${board.content}"></textarea>
+                <textarea class="text" name="content" th:text="${board.content}"></textarea>
             </td>
         </tr>
 
         <tr>
             <td>파일</td>
             <td>
-                파일 처리부분
+                <div th:if="${board.attachments != null and not #lists.isEmpty(board.attachments)}" class="attached-files">
+                    <p>현재 첨부파일:</p>
+                    <ul class="file-list">
+                        <li th:each="file : ${board.attachments}" th:id="'file-item-' + ${file.idx}">
+                            <span class="original-filename" th:text="${file.originalfile}">파일명.jpg</span>
+                        </li>
+                    </ul>
+                </div>
+                <p>새 첨부파일 추가:</p>
+                <input type="file" name="files" multiple>
             </td>
         </tr>
 

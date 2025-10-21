@@ -36,8 +36,28 @@
 
     <tr>
         <td>첨부 파일</td>
-        <td colspan="3"><p>현재파일 이름 보여주는 부분</p><br>
-            <a href="다운로드_주소_적기" class="download" target="_blank">다운로드</a>
+        <td colspan="3">
+            <th:block th:if="${board.attachments != null and not #lists.isEmpty(board.attachments)}">
+                <div class="file-attachments">
+                    <ul class="file-list" style="list-style-type: none; padding: 0;">
+                        <li th:each="file : ${board.attachments}" style="margin-bottom: 5px;">
+
+                            <a th:href="@{/download(idx=${file.idx})}" class="download-link" target="_blank">
+                                <span th:text="${file.originalfile}">첨부파일_이름.zip</span> [다운로드]
+                            </a>
+
+                            <th:block th:if="${#strings.contains(file.originalfile, '.jpg') or #strings.contains(file.originalfile, '.png') or #strings.contains(file.originalfile, '.gif')}">
+                                <br>
+                                <img th:src="@{/download(idx=${file.idx})}" alt="첨부 이미지" style="max-width: 150px; height: auto; margin-top: 5px; border: 1px solid #ccc;"/>
+                            </th:block>
+
+                        </li>
+                    </ul>
+                </div>
+            </th:block>
+            <th:block th:unless="${board.attachments != null and not #lists.isEmpty(board.attachments)}">
+                <p>첨부된 파일이 없습니다.</p>
+            </th:block>
         </td>
     </tr>
 
@@ -55,7 +75,7 @@
             <button type="submit" class="btn-delete">삭제</button>
         </form>
 
-        <button type="button" class="btn-list" onclick="history.back()">목록</button>
+        <a th:href="@{/board/list}"><button type="button" class="btn-list">목록</button></a>
     </div>
 
     </div>

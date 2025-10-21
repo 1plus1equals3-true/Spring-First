@@ -9,4 +9,5 @@ public interface BoardService {
     BoardDTO view(long idx);
     void delete(long idx);
     BoardDTO modify(long idx);
+    void modifyProc(BoardDTO dto);
 }

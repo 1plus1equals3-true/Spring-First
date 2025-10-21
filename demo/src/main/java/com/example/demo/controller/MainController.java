@@ -11,8 +11,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.NoSuchElementException;
 
 @Controller
@@ -39,6 +46,74 @@ public class MainController {
         model.addAttribute("msg",msg);
         model.addAttribute("url",url);
         return "error_page.html";
+    }
+
+    @GetMapping(value = {"/url"})
+    public String url() {
+        System.out.println("---------------> url");
+        return "url.html";
+    }
+
+    @PostMapping("/url_proc")
+    @ResponseBody
+    public String processUrl(@RequestParam("imageUrl") String imageUrl) {
+        System.out.println("---------------> /url_proc 요청 수신. URL: " + imageUrl);
+
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            return "ERROR: URL이 입력되지 않았습니다.";
+        }
+
+        // 1. 저장될 최종 디렉토리 경로 정의: {base-dir}/url
+        Path finalDir = Paths.get(UPLOAD_BASE_DIR, "url");
+
+        // 2. 파일 이름 추출 및 정리
+        String fileName;
+        try {
+            // URL에서 마지막 '/' 이후의 문자열을 파일명으로 사용
+            fileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+            // 쿼리 스트링(예: ?v=...)이 있다면 제거하여 깔끔한 파일명만 남김
+            if (fileName.contains("?")) {
+                fileName = fileName.substring(0, fileName.indexOf('?'));
+            }
+
+            // 파일명이 너무 짧거나 확장자가 없는 경우 등 보완 필요
+            if (fileName.length() < 3) {
+                fileName = "downloaded_" + System.currentTimeMillis();
+            }
+
+        } catch (Exception e) {
+            fileName = "downloaded_" + System.currentTimeMillis();
+        }
+
+        // 최종 저장 경로
+        Path targetPath = finalDir.resolve(fileName); // finalDir/fileName
+
+        try {
+            // 3. 디렉토리 생성 (없으면 생성)
+            // 상위 디렉토리(base-dir)와 url 디렉토리가 모두 없으면 한 번에 생성합니다.
+            Files.createDirectories(finalDir);
+
+            // 4. URL 객체 생성 및 이미지 다운로드
+            URL url = new URL(imageUrl);
+
+            try (InputStream in = url.openStream()) {
+                // 5. 이미지 스트림을 지정된 경로에 파일로 복사 (다운로드)
+                long bytes = Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+                return String.format(
+                        "SUCCESS: 이미지를 다운로드했습니다.<br>경로: %s<br>크기: %d bytes",
+                        targetPath.toAbsolutePath(), bytes
+                );
+            }
+        } catch (java.net.MalformedURLException e) {
+            System.err.println("잘못된 URL 형식: " + imageUrl);
+            return "ERROR: URL 형식이 잘못되었습니다.";
+        } catch (java.io.IOException e) {
+            System.err.println("파일 처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return "ERROR: 파일 다운로드 또는 디렉토리 생성에 실패했습니다. (서버 연결, 권한, 경로 확인)";
+        }
     }
 
     @GetMapping(value = "/member/Join")

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,7 +20,11 @@ public class BoardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idx;
 
-    private String userid;
+    //private String userid;
+
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    private MemberEntity member;
 
     private String name;
 

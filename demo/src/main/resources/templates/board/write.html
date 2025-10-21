@@ -4,32 +4,26 @@
     <meta charset="UTF-8">
     <title>게시글 작성</title>
     <link rel="stylesheet" href="/css/board/write.css">
+    <link rel="stylesheet" href="/css/tiptap-styles.css">
 </head>
 <body>
 
 <section class="min-height">
     <h1>글쓰기</h1><br>
-    <form action="/board/write_proc" method="post" enctype="multipart/form-data" class="write-form">
+    <form action="/board/write_proc" method="post" enctype="multipart/form-data" class="write-form" onsubmit="return setEditorContent(event);">
         <table>
-            <!-- 회원 비회원 구분 -->
             <tr>
                 <td>작성자</td>
                 <td><input type="text" name="name"></td>
             </tr>
-
             <tr>
                 <td>비밀번호</td>
                 <td><input type="text" name="pwd"></td>
             </tr>
-
-
-            <!-- 공지사항 체크 부분 -->
             <tr>
                 <td>공지사항</td>
                 <td><input type="checkbox" name="Noticemode"></td>
             </tr>
-
-            <!-- 메인 -->
             <tr>
                 <td>제목</td>
                 <td><input type="text" name="title"></td>
@@ -38,24 +32,17 @@
             <tr>
                 <td>내용</td>
                 <td>
-                    <textarea class="text" name="content"></textarea>
+                    <div id="tiptap-toolbar"></div>
+                    <div id="tiptap-editor-container" class="tiptap-editor-container"></div>
+                    <input type="hidden" name="content" id="editor-content-hidden">
                 </td>
             </tr>
-
             <tr>
                 <td>파일</td>
                 <td class="file-upload-container">
                     <button type="button" id="fileUploadButton">파일 선택 (최대 5개)</button>
-
-                    <!-- name="files"로 설정하여 List<MultipartFile>로 바인딩 -->
-                    <input type="file"
-                           name="files"
-                           id="hiddenFileInput"
-                           multiple
-                           accept=".gif, .jpg, .png">
-
+                    <input type="file" name="files" id="hiddenFileInput" multiple accept=".gif, .jpg, .png">
                     <div id="fileList">선택된 파일 없음</div>
-                    <!-- 오류 메시지 영역 -->
                     <div id="errorMessage" class="error-message"></div>
                 </td>
             </tr>
@@ -66,12 +53,12 @@
                     <button type="button" class="btn-cancel" onclick="history.back()">취소</button>
                 </td>
             </tr>
-
         </table>
     </form>
 </section>
 
 <script type="text/javascript" src="/js/write.js"></script>
+<script type="text/javascript" src="/js/tiptap-bundle.js"></script>
 
 </body>
 </html>
