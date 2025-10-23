@@ -37,6 +37,12 @@ public class MainController {
         return "home.html";
     }
 
+    @GetMapping(value = {"/admin"})
+    public String admin() {
+        System.out.println("---------------> admin");
+        return "admin/adminpage.html";
+    }
+
     @GetMapping(value = {"/error_page"})
     public String error_page(Model model) {
 
@@ -47,6 +53,18 @@ public class MainController {
         model.addAttribute("url",url);
         return "error_page.html";
     }
+
+    @GetMapping(value = {"/member/login"})
+    public String login() {
+        System.out.println("---------------> login");
+        return "member/login.html";
+    }
+
+//    @GetMapping(value = {"/member/login_proc"})
+//    public String login_proc() {
+//        System.out.println("---------------> login_proc");
+//        return "/";
+//    }
 
     @GetMapping(value = {"/url"})
     public String url() {
@@ -116,10 +134,10 @@ public class MainController {
         }
     }
 
-    @GetMapping(value = "/member/Join")
-    public String Join() {
+    @GetMapping(value = "/member/join")
+    public String join() {
         System.out.println("---------------> join");
-        return "member/Join.html";
+        return "member/join.html";
     }
 
     @GetMapping(value = {"/member/list"})
@@ -242,7 +260,7 @@ public class MainController {
         }
     }
 
-    @PostMapping(value = "/member/Join_proc")
+    @PostMapping(value = "/member/join_proc")
     public String Join_proc(JoinDTO dto,
                             Model model,
                             RedirectAttributes redirectAttributes) {

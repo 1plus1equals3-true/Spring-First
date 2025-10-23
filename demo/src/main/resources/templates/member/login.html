@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        form {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            width: 400px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-form {
+            justify-content: center;
+            align-items: center;
+            margin: 50px auto;
+        }
+
+        .login-form table {
+            width: 100%;
+            max-width: 400px;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .login-form td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .login-form tr td:first-child {
+            font-weight: bold;
+            color: #495057;
+            text-align: center;
+            width: 80px;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .login-form input[type="submit"],
+        .login-form .btn-join {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .login-form input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            height: 100%;
+        }
+
+        .login-form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .login-form .btn-join {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .login-form .btn-join:hover {
+            background-color: #218838;
+        }
+
+        .login-form a {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<form action="/member/login_proc" method="post" class="login-form">
+    <h2 style="text-align: center;">로 그 인</h2>
+    <table>
+
+        <tr>
+            <td>아이디</td>
+            <td colspan="2"><input type="text" name="userid"></td>
+        </tr>
+
+        <tr>
+            <td>비밀번호</td>
+            <td colspan="2"><input type="password" name="pwd"></td>
+        </tr>
+
+        <tr>
+            <td colspan="3"><input type="submit" value="로그인"></td>
+        </tr>
+
+        <tr>
+            <td colspan="3"><a href="/member/join"><button type="button" class="btn-join">회원가입</button></a></td>
+            <td><a href="/member/login"><button type="button" class="btn-join">취소</button></a></td>
+        </tr>
+
+    </table>
+</form>
+</body>
+
+</html>
