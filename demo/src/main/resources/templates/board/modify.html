@@ -8,13 +8,14 @@
 
     <th:block layout:fragment="extra-css">
         <link rel="stylesheet" th:href="@{/css/board/write.css}">
+        <link rel="stylesheet" th:href="@{/css/tiptap-styles.css}">
     </th:block>
 </head>
 
 <div layout:fragment="content">
 
 <h1>글 수정</h1><br>
-<form th:action="@{/board/modify_proc}" method="post" enctype="multipart/form-data" class="write-form">
+<form th:action="@{/board/modify_proc}" method="post" enctype="multipart/form-data" class="write-form" onsubmit="return setEditorContent(event);">
     <input type="hidden" name="idx" th:value="${board.idx}">
     <input type="hidden" name="ip" th:value="${board.ip}">
     <table>
@@ -27,24 +28,41 @@
         <tr>
             <td>내용</td>
             <td>
-                <textarea class="text" name="content" th:text="${board.content}"></textarea>
+                <div id="tiptap-toolbar"></div>
+
+                <div id="tiptap-editor-container" class="tiptap-editor-container">
+                    <div id="initial-content" th:utext="${board.content}" style="display:none;"></div>
+                </div>
+
+                <input type="hidden" name="content" id="editor-content-hidden">
             </td>
         </tr>
 
         <tr>
+        <tr>
             <td>파일</td>
-            <td>
+            <td class="file-upload-container">
                 <div th:if="${board.attachments != null and not #lists.isEmpty(board.attachments)}" class="attached-files">
-                    <p>현재 첨부파일:</p>
-                    <ul class="file-list">
+                    <p>현재 첨부파일 (삭제할 파일 선택):</p>
+                    <ul class="file-list current-file-list">
                         <li th:each="file : ${board.attachments}" th:id="'file-item-' + ${file.idx}">
-                            <span class="original-filename" th:text="${file.originalfile}">파일명.jpg</span>
+                            <input type="checkbox" name="deleteAttachIdx" th:value="${file.idx}" th:id="'delete-' + ${file.idx}">
+                            <label th:for="'delete-' + ${file.idx}">
+                                <span class="original-filename" th:text="${file.originalfile}">파일명.jpg</span>
+                            </label>
                         </li>
                     </ul>
                 </div>
+
                 <p>새 첨부파일 추가:</p>
-                <input type="file" name="files" multiple>
+                <button type="button" id="fileUploadButton">파일 선택 (최대 5개)</button>
+                <input type="file" name="files" id="hiddenFileInput" multiple accept=".gif, .jpg, .png" style="display:none;">
+
+                <div id="fileList" class="new-file-list">선택된 파일 없음</div>
+                <div id="errorMessage" class="error-message"></div>
+
             </td>
+            </tr>
         </tr>
 
         <tr>
@@ -58,4 +76,23 @@
 </form>
 
 </div>
+
+<th:block layout:fragment="extra-script">
+    <script type="text/javascript" th:src="@{/js/write.js}"></script>
+    <script type="text/javascript" th:src="@{/js/tiptap-bundle.js}"></script>
+
+    <script type="text/javascript" th:inline="javascript">
+        /* Thymeleaf를 사용하여 기존 board.content HTML 문자열을 JS 변수에 저장 */
+        const initialContent = /*[[${board.content}]]*/ '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            /* tiptap-initializer.js에 정의된 전역 초기화 함수 호출 */
+            /* 수정 페이지이므로 반드시 initialContent를 넘겨야 합니다. */
+            if (window.initializeTiptapEditor) {
+                window.initializeTiptapEditor(initialContent);
+            }
+        });
+    </script>
+</th:block>
+
 </html>

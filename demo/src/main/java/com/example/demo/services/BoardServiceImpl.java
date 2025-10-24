@@ -5,8 +5,10 @@ import com.example.demo.dto.BoardDTO;
 import com.example.demo.dto.ListPageDTO;
 import com.example.demo.entity.BoardAttachmentEntity;
 import com.example.demo.entity.BoardEntity;
+import com.example.demo.entity.MemberEntity;
 import com.example.demo.repository.BoardAttachmentRepository;
 import com.example.demo.repository.BoardRepository;
+import com.example.demo.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardAttachmentRepository boardAttachmentRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${file.upload.base-dir}")
     private String UPLOAD_BASE_DIR;
@@ -49,9 +52,18 @@ public class BoardServiceImpl implements BoardService {
         boardEntity.setTitle(dto.getTitle());
         boardEntity.setContent(dto.getContent());
 
+        String loggedInUserid = dto.getUserid(); // DTO에서 hidden 필드 값 획득
+        boardEntity.setBoardtype(2L);
+
+        if (loggedInUserid != null && !loggedInUserid.isEmpty()) {
+            MemberEntity memberEntity = memberRepository.findByUserid(loggedInUserid);
+            boardEntity.setBoardtype(1L); // 로그인 시 1로 수정
+
+            boardEntity.setMember(memberEntity);
+        }
+
         boardEntity.setRegdate(LocalDateTime.now());
         boardEntity.setIp(clientIp);
-        boardEntity.setBoardtype(2L); // 나중에 변수로 받거나해서 수정
 
         BoardEntity savedBoard = boardRepository.save(boardEntity);
         long newBoardIdx = savedBoard.getIdx();
@@ -156,7 +168,7 @@ public class BoardServiceImpl implements BoardService {
         BoardDTO boardDTO = BoardDTO.builder()
                 .idx(idx)
                 .title(boardEntity.getTitle())
-                .name(boardEntity.getName())
+                .name(boardEntity.getMember() != null ? boardEntity.getMember().getName() : "익명")
                 .regDate(boardEntity.getRegdate())
                 .hit(boardEntity.getHit())
                 .ip(boardEntity.getIp())
@@ -250,54 +262,74 @@ public class BoardServiceImpl implements BoardService {
         BoardEntity boardEntity = boardRepository.findById(dto.getIdx())
                 .orElseThrow(() -> new NoSuchElementException("수정할 게시글(idx: " + dto.getIdx() + ")을 찾을 수 없습니다."));
 
-        // 게시글 내용 수정
+        // 1. 게시글 내용 수정 (제목, 내용)
         boardEntity.setTitle(dto.getTitle());
         boardEntity.setContent(dto.getContent());
 
-        // 파일 수정 처리
-        if (dto.getFiles() != null && !dto.getFiles().isEmpty() &&
-                dto.getFiles().stream().anyMatch(file -> !file.isEmpty())) {
-
-            // 기존 첨부파일 삭제
-            List<BoardAttachmentEntity> existingAttachments = boardAttachmentRepository.findByBidx(dto.getIdx());
-
-            if (!existingAttachments.isEmpty()) {
-
-                // 파일 삭제
-                for (BoardAttachmentEntity attachment : existingAttachments) {
-                    String fileDir = attachment.getDir();
-                    File attachedFile = new File(UPLOAD_BASE_DIR, fileDir);
-
-                    if (attachedFile.exists()) {
-                        if (!attachedFile.delete()) {
-                            // 파일 시스템 삭제 실패 시 롤백을 위해 RuntimeException 발생
-                            throw new RuntimeException("기존 파일 시스템 삭제 실패: " + fileDir);
-                        }
-                    }
-                }
-
-                // DB에서 첨부파일 엔티티 삭제
-                boardAttachmentRepository.deleteAll(existingAttachments);
-                System.out.println("기존 첨부파일 " + existingAttachments.size() + "개 삭제 완료.");
+        // 2. 기존 파일 삭제 처리 (체크박스로 넘어온 deleteAttachIdx 처리)
+        List<Long> deleteAttachIdxList = dto.getDeleteAttachIdx();
+        int deletedCount = 0;
+        if (deleteAttachIdxList != null && !deleteAttachIdxList.isEmpty()) {
+            for (Long attachIdx : deleteAttachIdxList) {
+                // 개별 파일 삭제 로직 호출 (파일 시스템 및 DB)
+                deleteAttachment(attachIdx);
+                deletedCount++;
             }
-
-            // 새로운 첨부파일 저장
-            List<MultipartFile> validFiles = dto.getFiles().stream()
-                    .filter(file -> !file.isEmpty())
-                    .collect(Collectors.toList());
-
-            if (!validFiles.isEmpty()) {
-                if (validFiles.size() > 5) {
-                    throw new RuntimeException("첨부 파일은 최대 5개까지만 허용됩니다.");
-                }
-
-                processAttachments(dto.getIdx(), validFiles);
-            }
-
-        } else if (dto.getFiles() != null && dto.getFiles().stream().allMatch(MultipartFile::isEmpty)) {
-            // 파일을 선택하지 않은 경우 기존 파일 유지
-            System.out.println("새로운 첨부파일 없음. 기존 파일 유지.");
+            System.out.println("기존 첨부파일 " + deletedCount + "개 삭제 완료.");
         }
+
+        // 3. 새로운 첨부파일 목록 필터링
+        List<MultipartFile> newValidFiles = (dto.getFiles() != null)
+                ? dto.getFiles().stream().filter(file -> !file.isEmpty()).collect(Collectors.toList())
+                : List.of();
+
+        int newFileCount = newValidFiles.size();
+
+        if (newFileCount > 0) {
+
+            // 4. 최종 파일 개수 제한 확인 (5개)
+            // 현재 남아있는 파일 수 = 전체 파일 수 - (이번 트랜잭션에서 삭제된 파일 수)
+            // 현재 남아있는 파일을 다시 DB에서 조회하여 정확한 개수를 얻습니다.
+            List<BoardAttachmentEntity> remainingAttachments = boardAttachmentRepository.findByBidx(dto.getIdx());
+            int remainingCount = remainingAttachments.size();
+
+            int totalNewCount = remainingCount + newFileCount;
+
+            if (totalNewCount > 5) {
+                throw new RuntimeException("첨부 파일은 최대 5개까지만 허용됩니다. (현재 " + remainingCount + "개, 추가 요청 " + newFileCount + "개)");
+            }
+
+            // 5. 새로운 첨부파일 저장
+            processAttachments(dto.getIdx(), newValidFiles);
+            System.out.println("새로운 첨부파일 " + newFileCount + "개 저장 완료.");
+        }
+
+        // 게시글 업데이트는 @Transactional 덕분에 자동 반영됩니다.
+    }
+
+    // =========================================================================
+    // ★★★ 새로 추가된 메서드: 단일 첨부파일 삭제 처리 ★★★
+    // =========================================================================
+    private void deleteAttachment(long attachIdx) {
+        BoardAttachmentEntity attachment = boardAttachmentRepository.findById(attachIdx)
+                .orElseThrow(() -> new NoSuchElementException("첨부파일(idx: " + attachIdx + ")을 찾을 수 없습니다."));
+
+        String fileDir = attachment.getDir();
+        File attachedFile = new File(UPLOAD_BASE_DIR, fileDir);
+
+        if (attachedFile.exists()) {
+            if (attachedFile.delete()) {
+                System.out.println("첨부파일 삭제 성공: " + fileDir);
+            } else {
+                // 파일 시스템 삭제 실패 시 롤백을 위해 RuntimeException 발생
+                throw new RuntimeException("파일 시스템 삭제 실패: " + fileDir);
+            }
+        } else {
+            System.out.println("첨부파일이 경로에 존재하지 않음 (DB에서만 삭제 진행): " + fileDir);
+        }
+
+        // DB에서 첨부파일 엔티티 삭제
+        boardAttachmentRepository.delete(attachment);
     }
 
     private void processAttachments(long bidx, List<MultipartFile> files) {

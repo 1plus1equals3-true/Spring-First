@@ -29,4 +29,14 @@ public class BoardDTO {
     private LocalDateTime regDate; // view용
 
     private List<BoardAttachmentDTO> attachments; // 현재 게시글 첨부파일 확인
+
+    // BoardDTO.java (추가되어야 할 필드)
+    private List<Long> deleteAttachIdx;
+
+    public List<Long> getDeleteAttachIdx() {
+        return deleteAttachIdx;
+    }
+    public void setDeleteAttachIdx(List<Long> deleteAttachIdx) {
+        this.deleteAttachIdx = deleteAttachIdx;
+    }
 }

@@ -3,9 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.dto.BoardDTO;
 import com.example.demo.dto.ListPageDTO;
 import com.example.demo.services.BoardService;
+import com.example.demo.services.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -182,8 +185,27 @@ public class BoardController {
     }
 
     @GetMapping(value = {"/board/write"})
-    public String write() {
+    public String write(Model model) {
         System.out.println("---------------> write");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetailsImpl) {
+            // 로그인한 사용자입니다.
+            UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+            System.out.println("---------------> write - 로그인 사용자: " + userDetails.getName());
+
+            model.addAttribute("isLoggedIn", true);
+            model.addAttribute("loggedInName", userDetails.getName());
+            model.addAttribute("loggedInID", userDetails.getUsername());
+        } else {
+            // 비로그인 사용자 ('anonymousUser' 문자열 등)
+            System.out.println("---------------> write - 비로그인 사용자");
+            model.addAttribute("isLoggedIn", false);
+        }
+
         return "board/write.html";
     }
 

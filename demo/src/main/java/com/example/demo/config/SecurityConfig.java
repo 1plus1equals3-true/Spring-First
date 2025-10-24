@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.handler.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/idCheck").permitAll()
                         .requestMatchers("/member/join","/member/join_proc").permitAll()
                         .requestMatchers("/member/login").permitAll()
+                        .requestMatchers("/error_page").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
@@ -36,7 +38,9 @@ public class SecurityConfig {
                         .usernameParameter("userid")
                         .passwordParameter("pwd")
                         .defaultSuccessUrl("/board/list")
-                        .failureUrl("/member/login?error"));
+                        .failureHandler(new CustomAuthenticationFailureHandler())
+                        //.failureUrl("/member/login?error")
+                        );
 
         http.logout(logout -> logout
                 .logoutUrl("/member/logout") // 로그아웃 URL 지정

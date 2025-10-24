@@ -43,15 +43,16 @@ public class MainController {
         return "admin/adminpage.html";
     }
 
-    @GetMapping(value = {"/error_page"})
-    public String error_page(Model model) {
+    @GetMapping("/error_page")
+    public String error(Model model,
+                        @RequestParam(value="msg", defaultValue="error") String msg,
+                        @RequestParam(value="url", defaultValue="/") String url){
+        System.out.println("/error_page");
 
-        String msg = model.getAttribute("msg").toString();
-        String url = model.getAttribute("url").toString();
+        model.addAttribute("msg", msg);
+        model.addAttribute("url", url);
 
-        model.addAttribute("msg",msg);
-        model.addAttribute("url",url);
-        return "error_page.html";
+        return "/error_page.html";
     }
 
     @GetMapping(value = {"/member/login"})

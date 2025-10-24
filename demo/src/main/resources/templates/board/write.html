@@ -1,34 +1,49 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}"
+      lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 작성</title>
-    <link rel="stylesheet" href="/css/board/write.css">
-    <link rel="stylesheet" href="/css/tiptap-styles.css">
-</head>
-<body>
+    <title>modify</title>
 
-<section class="min-height">
+    <th:block layout:fragment="extra-css">
+        <link rel="stylesheet" th:href="@{/css/board/write.css}">
+        <link rel="stylesheet" th:href="@{/css/tiptap-styles.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+
     <h1>글쓰기</h1><br>
     <form action="/board/write_proc" method="post" enctype="multipart/form-data" class="write-form" onsubmit="return setEditorContent(event);">
         <table>
-            <tr>
-                <td>작성자</td>
-                <td><input type="text" name="name"></td>
-            </tr>
-            <tr>
-                <td>비밀번호</td>
-                <td><input type="text" name="pwd"></td>
-            </tr>
-            <tr>
-                <td>공지사항</td>
-                <td><input type="checkbox" name="Noticemode"></td>
-            </tr>
+            <div th:if="${isLoggedIn}">
+                <tr>
+                    <td>작성자</td>
+                    <td>
+                        <p class="form-control-static" th:text="${loggedInName}">사용자명</p>
+                        <input type="hidden" name="name" th:value="${loggedInName}"/>
+                        <input type="hidden" name="pwd" th:value="login">
+                        <input type="hidden" name="userid" th:value="${loggedInID}"/>
+                    </td>
+                </tr>
+            </div>
+            <div th:unless="${isLoggedIn}">
+                <tr>
+                    <td>작성자</td>
+                    <td><input type="text" name="name"></td>
+                </tr>
+                <tr>
+                    <td>비밀번호</td>
+                    <td><input type="text" name="pwd"></td>
+                </tr>
+            </div>
             <tr>
                 <td>제목</td>
                 <td><input type="text" name="title"></td>
             </tr>
 
+            <tr>
             <tr>
                 <td>내용</td>
                 <td>
@@ -36,6 +51,7 @@
                     <div id="tiptap-editor-container" class="tiptap-editor-container"></div>
                     <input type="hidden" name="content" id="editor-content-hidden">
                 </td>
+            </tr>
             </tr>
             <tr>
                 <td>파일</td>
@@ -55,10 +71,11 @@
             </tr>
         </table>
     </form>
-</section>
+</div>
 
-<script type="text/javascript" src="/js/write.js"></script>
-<script type="text/javascript" src="/js/tiptap-bundle.js"></script>
+<th:block layout:fragment="extra-script">
+    <script type="text/javascript" src="/js/write.js"></script>
+    <script type="text/javascript" src="/js/tiptap-bundle.js"></script>
+</th:block>
 
-</body>
 </html>

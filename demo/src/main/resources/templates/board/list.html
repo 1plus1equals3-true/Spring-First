@@ -31,7 +31,7 @@
         <tr th:each="board, stat : ${list}">
             <td th:text="${startNumber - stat.index}">10</td>
             <td style="text-align: left;"><a th:href="@{/board/view(idx=${board.idx})}" th:text="${board.title}"></a></td>
-            <td th:text="${board.name}"></td>
+            <td th:text="${board.member != null ? board.member.name : board.name}"></td>
             <td th:text="${#temporals.format(board.regdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${board.hit}"></td>
         </tr>

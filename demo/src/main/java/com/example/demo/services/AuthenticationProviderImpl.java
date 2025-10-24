@@ -32,7 +32,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         System.out.println(user);
 
         if(pwd.equals(user.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(userid, pwd, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user, pwd, user.getAuthorities());
         } else {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }

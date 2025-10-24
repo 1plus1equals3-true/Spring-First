@@ -3,38 +3,63 @@ import StarterKit from '@tiptap/starter-kit';
 
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import { TextStyle } from '@tiptap/extension-text-style'; // Color 확장의 기반
-import Color from '@tiptap/extension-color';           // Color 확장
+import { TextStyle } from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 
 // Tiptap Editor 인스턴스를 전역에서 접근할 수 있도록 선언
 window.tiptapEditorInstance = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+// =========================================================================
+// ★★★ 수정/추가된 부분: 기존 내용을 로드하는 전역 초기화 함수 ★★★
+// =========================================================================
+
+/**
+ * Tiptap 에디터를 초기화하고 주어진 HTML 내용을 에디터에 로드합니다.
+ * @param {string} initialContent 초기 로드할 HTML 내용. (수정 시 board.content)
+ */
+window.initializeTiptapEditor = function(initialContent) {
+    // 이미 인스턴스가 있다면 파괴하고 다시 만듭니다 (수정 페이지에서 안전하게 재사용하기 위해)
+    if (window.tiptapEditorInstance) {
+        window.tiptapEditorInstance.destroy();
+    }
+
+    // 초기 내용이 없으면 기본 문구를 사용
+    const contentToLoad = initialContent || '<p>여기에 글을 작성하세요.</p>';
 
     window.tiptapEditorInstance = new Editor({
         element: document.querySelector('#tiptap-editor-container'),
         extensions: [
             StarterKit,
-
-            // --- [새 확장 기능 등록 및 설정] ---
-            TextStyle, // Color 확장보다 먼저 등록해야 합니다.
+            TextStyle,
             Color.configure({}),
-
             Image.configure({
-                inline: true, // 이미지를 텍스트 흐름에 포함 (줄바꿈 없이)
-                allowBase64: true, // 작은 이미지를 인코딩하여 삽입 허용 (개발용)
+                inline: true,
+                allowBase64: true,
             }),
-
             Link.configure({
-                openOnClick: false, // 클릭 시 바로 이동 방지 (편집을 위해)
+                openOnClick: false,
                 defaultProtocol: 'https',
             }),
-            // ---------------------------------
         ],
-        content: '<p>여기에 글을 작성하세요.</p>',
+        // 초기 내용을 인수로 받은 contentToLoad로 설정
+        content: contentToLoad,
     });
 
     setupToolbar(window.tiptapEditorInstance);
+};
+
+// =========================================================================
+// ★★★ 기존 DOMContentLoaded 초기화 제거 및 대신 초기 작성 페이지 처리 로직 추가 ★★★
+// =========================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 글 작성 페이지에서는 초기 내용 없이 바로 에디터를 초기화하도록 처리
+    // (modify.html에서는 이 부분을 건너뛰고 별도로 initializeTiptapEditor를 호출해야 함)
+    const editorContainer = document.querySelector('#tiptap-editor-container');
+    if (editorContainer && editorContainer.innerHTML === '') {
+        // 팁: write.html에서는 초기 콘텐츠가 없으므로 바로 초기화, modify.html에서는 별도 호출
+        window.initializeTiptapEditor(null);
+    }
 });
 
 // HTML의 onsubmit 이벤트에서 호출될 전역 함수

@@ -42,4 +42,8 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return memberEntity.getUserid();
     }
+
+    public String getName() {
+        return memberEntity.getName();
+    }
 }
