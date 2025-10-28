@@ -10,16 +10,17 @@
     <link rel="stylesheet" href="/css/join.css">
 </head>
 <div layout:fragment="content">
-	<form name="join_form" action="/member/join_proc" method="post" enctype="multipart/form-data">
+	<form th:object="${joinDTO}" name="join_form" action="/member/join" method="post" enctype="multipart/form-data">
 		<h2>회 원 가 입</h2>
 		<table>
 		<tr>
 		<td>아이디</td>
-		<td><input type="text" name="userid" id="userid" onkeyup="id_check()"></td>
+		<td><input type="text" name="userid" id="userid" onkeyup="id_check()" th:field="*{userid}"></td>
 		</tr>
 		
 		<tr>
-		<td colspan="2" style="text-align: center;"><span id="id_msg"></span></td>
+		<td colspan="2" style="text-align: center;"><span id="id_msg" th:if="${#fields.hasErrors('userid')}"
+                                                          th:errors="*{userid}"></span></td>
 		</tr>
 		
 		<tr>

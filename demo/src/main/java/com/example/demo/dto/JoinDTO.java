@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.MemberEntity;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 public class JoinDTO {
     private long idx;
+
+    @NotBlank(message="아이디는 필수입니다!!!!")
     private String userid;
+
     private String pwd1;
     private String pwd2;
     private String name;

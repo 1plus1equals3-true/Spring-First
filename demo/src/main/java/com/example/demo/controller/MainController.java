@@ -4,10 +4,12 @@ import com.example.demo.dto.JoinDTO;
 import com.example.demo.dto.ListPageDTO;
 import com.example.demo.dto.MemberViewDTO;
 import com.example.demo.services.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -135,11 +137,7 @@ public class MainController {
         }
     }
 
-    @GetMapping(value = "/member/join")
-    public String join() {
-        System.out.println("---------------> join");
-        return "member/join.html";
-    }
+
 
     @GetMapping(value = {"/member/list"})
     public String list(Model model,
@@ -261,12 +259,25 @@ public class MainController {
         }
     }
 
-    @PostMapping(value = "/member/join_proc")
-    public String Join_proc(JoinDTO dto,
+    @GetMapping(value = "/member/join")
+    public String join(Model model) {
+        System.out.println("---------------> join");
+        model.addAttribute("joinDTO", new JoinDTO());
+        return "member/join";
+    }
+
+    @PostMapping(value = "/member/join")
+    public String Join_proc(@Valid JoinDTO dto,
+                            BindingResult result,
                             Model model,
                             RedirectAttributes redirectAttributes) {
 
         System.out.println("---------------> join_proc");
+
+        if(result.hasErrors())
+        {
+            return "member/join";
+        }
 
         boolean insert = memberService.insert(dto);
         model.addAttribute("dto", dto);
